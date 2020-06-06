@@ -14,6 +14,11 @@ class RunStates(Enum):
     ProcessReceivedGeneralItem = 6
     SureToSellRune = 7
     TryToRestartFarmRun = 8
+    NotEnoughEnergyDialog = 9
+    EnergyReBuyShop = 10
+    PurchaseWithCrystals = 11
+    PurchaseSuccessful = 12
+    CloseShop = 13
 
 
 def IsActionDelayElapsed(delayInSeconds):
@@ -37,7 +42,6 @@ def DoClickOnTargetClass(classToClick, detectedClasses, detectedBoxes, screensho
     classIndex = classIndexCollection[0]
 
     if not IsActionDelayElapsed(3):
-        print("\nAction delay NOT elapsed")
         return False
 
     imageHeight, imageWidth, colorChannel = screenshot.shape
@@ -64,3 +68,10 @@ def IsRuneReceived(detectedClasses):
                 or detectedClass == DetectionClasses.MainStat.value \
                 or detectedClass == DetectionClasses.SubStats.value:
             return True
+
+
+def IsEnergyRechargeRequired(detectedClasses):
+    if DetectionClasses.NotEnoughEnergyDialog.value in detectedClasses:
+        return True
+    else:
+        return False
