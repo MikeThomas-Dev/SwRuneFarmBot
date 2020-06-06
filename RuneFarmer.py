@@ -1,6 +1,5 @@
 import cv2
 import random
-import time
 from SwRuneFarmerProject.TensorflowWrapper import PerformObjectDetection, DetectionClasses, IsDetectionResultConsistent, \
     ReduceDetectionResultsToThreshold
 from SwRuneFarmerProject.WindowsUiUtility import GetWindowHandleByWindowTitle, GetScreenShotFromWindow, \
