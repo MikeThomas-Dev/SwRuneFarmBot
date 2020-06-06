@@ -1,7 +1,7 @@
 import cv2
 import random
-from SwRuneFarmerProject.TensorflowWrapper import PerformObjectDetection, DetectionClasses, IsDetectionResultConsistent, \
-    ReduceDetectionResultsToThreshold
+from SwRuneFarmerProject.TensorflowWrapper import PerformObjectDetection, DetectionClasses, \
+    IsDetectionResultConsistent, ReduceDetectionResultsToThreshold
 from SwRuneFarmerProject.WindowsUiUtility import GetWindowHandleByWindowTitle, GetScreenShotFromWindow, \
     SetCursorPosition, DoLeftClick
 from SwRuneFarmerProject.TesseractUtility import GetRuneTitle, GetRuneMainStat, GetRuneSubStats
@@ -30,45 +30,47 @@ while True:
     print("\nConsistent detection result")
 
     if currentRunState == RunStates.RunInProgress:
-        for i in range(classesToConsider.size):
-            if classesToConsider[i] == DetectionClasses.VictoryLabel.value:
-                if not IsActionDelayElapsed(3):
-                    print("\nAction delay NOT elapsed")
-                    continue
+        victoryLabelIndex = [i for i in range(len(classesToConsider)) if classesToConsider[i]
+                             == DetectionClasses.VictoryLabel.value]
 
-                # [ymin, xmin, ymax, xmax] boxes coordinate format
-                yMinAbsolute = int(boxesToConsider[i][0] * imageHeight)
-                yMaxAbsolute = int(boxesToConsider[i][2] * imageHeight)
-                xMaxAbsolute = int(boxesToConsider[i][3] * imageWidth)
-                xMinAbsolute = int(boxesToConsider[i][1] * imageWidth)
+        if not IsActionDelayElapsed(3):
+            print("\nAction delay NOT elapsed")
+            continue
 
-                randomYPosInRange = random.randint(yMinAbsolute, yMaxAbsolute)
-                randomXPosInRange = random.randint(xMinAbsolute, xMaxAbsolute)
+        # [ymin, xmin, ymax, xmax] boxes coordinate format
+        yMinAbsolute = int(boxesToConsider[victoryLabelIndex[0]][0] * imageHeight)
+        yMaxAbsolute = int(boxesToConsider[victoryLabelIndex[0]][2] * imageHeight)
+        xMaxAbsolute = int(boxesToConsider[victoryLabelIndex[0]][3] * imageWidth)
+        xMinAbsolute = int(boxesToConsider[victoryLabelIndex[0]][1] * imageWidth)
 
-                SetCursorPosition(randomXPosInRange, randomYPosInRange)
-                DoLeftClick()
-                print("\nVictory screen click performed!")
+        randomYPosInRange = random.randint(yMinAbsolute, yMaxAbsolute)
+        randomXPosInRange = random.randint(xMinAbsolute, xMaxAbsolute)
 
-                currentRunState = RunStates.WaitingAtTreasureBox
+        SetCursorPosition(randomXPosInRange, randomYPosInRange)
+        DoLeftClick()
+        print("\nVictory screen click performed!")
+
+        currentRunState = RunStates.WaitingAtTreasureBox
     elif currentRunState == RunStates.WaitingAtTreasureBox:
-        for i in range(classesToConsider.size):
-            if classesToConsider[i] == DetectionClasses.TreasureBox.value:
-                if not IsActionDelayElapsed(3):
-                    print("\nAction delay NOT elapsed")
-                    continue
+        treasureBoxIndex = [i for i in range(len(classesToConsider)) if classesToConsider[i]
+                            == DetectionClasses.TreasureBox.value]
 
-                # [ymin, xmin, ymax, xmax] boxes coordinate format
-                yMinAbsolute = int(boxesToConsider[i][0] * imageHeight)
-                yMaxAbsolute = int(boxesToConsider[i][2] * imageHeight)
-                xMaxAbsolute = int(boxesToConsider[i][3] * imageWidth)
-                xMinAbsolute = int(boxesToConsider[i][1] * imageWidth)
+        if not IsActionDelayElapsed(3):
+            print("\nAction delay NOT elapsed")
+            continue
 
-                randomYPosInRange = random.randint(yMinAbsolute, yMaxAbsolute)
-                randomXPosInRange = random.randint(xMinAbsolute, xMaxAbsolute)
+        # [ymin, xmin, ymax, xmax] boxes coordinate format
+        yMinAbsolute = int(boxesToConsider[treasureBoxIndex[0]][0] * imageHeight)
+        yMaxAbsolute = int(boxesToConsider[treasureBoxIndex[0]][2] * imageHeight)
+        xMaxAbsolute = int(boxesToConsider[treasureBoxIndex[0]][3] * imageWidth)
+        xMinAbsolute = int(boxesToConsider[treasureBoxIndex[0]][1] * imageWidth)
 
-                SetCursorPosition(randomXPosInRange, randomYPosInRange)
-                DoLeftClick()
-                print("\nTreasure box click performed!")
+        randomYPosInRange = random.randint(yMinAbsolute, yMaxAbsolute)
+        randomXPosInRange = random.randint(xMinAbsolute, xMaxAbsolute)
+
+        SetCursorPosition(randomXPosInRange, randomYPosInRange)
+        DoLeftClick()
+        print("\nTreasure box click performed!")
     else:
         continue
 
@@ -104,3 +106,4 @@ while True:
                 runeSubStats = GetRuneSubStats(snippet, False, True)
 
     isDetectionResultConsistent = False
+    currentRunState = RunStates.RunInProgress
