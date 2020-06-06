@@ -1,11 +1,19 @@
 from enum import Enum
 import time
+import random
+from SwRuneFarmerProject.WindowsUiUtility import SetCursorPosition, DoLeftClick
+from SwRuneFarmerProject.TensorflowWrapper import BoxCoordinateFormat, DetectionClasses
 
 
 class RunStates(Enum):
     RunInProgress = 1
     WaitingAtVictoryScreen = 2
     WaitingAtTreasureBox = 3
+    AnalyseReceivedItemType = 4
+    ProcessReceivedRune = 5
+    ProcessReceivedGeneralItem = 6
+    SureToSellRune = 7
+    TryToRestartFarmRun = 8
 
 
 def IsActionDelayElapsed(delayInSeconds):
@@ -21,3 +29,38 @@ def IsActionDelayElapsed(delayInSeconds):
 
 
 IsActionDelayElapsed.actionDelayStartTime = None
+
+
+def DoClickOnTargetClass(classToClick, detectedClasses, detectedBoxes, screenshot):
+    classIndexCollection = [i for i in range(len(detectedClasses)) if detectedClasses[i] == classToClick]
+    # first result is used in the case of multiple matching detections as it is the one with the highest detection score
+    classIndex = classIndexCollection[0]
+
+    if not IsActionDelayElapsed(3):
+        print("\nAction delay NOT elapsed")
+        return False
+
+    imageHeight, imageWidth, colorChannel = screenshot.shape
+
+    yMinAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.YMinCoordinate.value] * imageHeight)
+    yMaxAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.YMaxCoordinate.value] * imageHeight)
+    xMinAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.XMinCoordinate.value] * imageWidth)
+    xMaxAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.XMaxCoordinate.value] * imageWidth)
+
+    randomYCoordinateInBox = random.randint(yMinAbsolute, yMaxAbsolute)
+    randomXCoordinateInBox = random.randint(xMinAbsolute, xMaxAbsolute)
+
+    SetCursorPosition(randomXCoordinateInBox, randomYCoordinateInBox)
+    DoLeftClick()
+    return True
+
+
+def IsRuneReceived(detectedClasses):
+    # classes are ordered by their detection score -> first item in loop decides which item type was received
+    for detectedClass in detectedClasses:
+        if detectedClass == DetectionClasses.GeneralItem.value:
+            return False
+        elif detectedClass == DetectionClasses.Title.value \
+                or detectedClass == DetectionClasses.MainStat.value \
+                or detectedClass == DetectionClasses.SubStats.value:
+            return True

@@ -1,11 +1,10 @@
 import cv2
-import random
 from SwRuneFarmerProject.TensorflowWrapper import PerformObjectDetection, DetectionClasses, \
     IsDetectionResultConsistent, ReduceDetectionResultsToThreshold
-from SwRuneFarmerProject.WindowsUiUtility import GetWindowHandleByWindowTitle, GetScreenShotFromWindow, \
-    SetCursorPosition, DoLeftClick
+from SwRuneFarmerProject.WindowsUiUtility import GetWindowHandleByWindowTitle, GetScreenShotFromWindow
 from SwRuneFarmerProject.TesseractUtility import GetRuneTitle, GetRuneMainStat, GetRuneSubStats
-from SwRuneFarmerProject.FarmingStateMachine import RunStates, IsActionDelayElapsed
+from SwRuneFarmerProject.FarmingStateMachine import RunStates, DoClickOnTargetClass, IsRuneReceived, \
+    IsActionDelayElapsed
 
 detectionScoreThreshold = 0.7
 snippetSizePercentOffset = 0.004
@@ -14,6 +13,8 @@ borderColor = [0, 0, 0]
 bluestacksHwnd = GetWindowHandleByWindowTitle("BlueStacks")
 
 currentRunState = RunStates.RunInProgress
+
+isRuneSold = None
 
 while True:
     screenshot = GetScreenShotFromWindow(bluestacksHwnd)
@@ -30,47 +31,79 @@ while True:
     print("\nConsistent detection result")
 
     if currentRunState == RunStates.RunInProgress:
-        victoryLabelIndex = [i for i in range(len(classesToConsider)) if classesToConsider[i]
-                             == DetectionClasses.VictoryLabel.value]
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.VictoryLabel.value, classesToConsider,
+                                                boxesToConsider, screenshot)
 
-        if not IsActionDelayElapsed(3):
-            print("\nAction delay NOT elapsed")
+        if isClickPerformed:
+            currentRunState = RunStates.WaitingAtTreasureBox
+        else:
             continue
 
-        # [ymin, xmin, ymax, xmax] boxes coordinate format
-        yMinAbsolute = int(boxesToConsider[victoryLabelIndex[0]][0] * imageHeight)
-        yMaxAbsolute = int(boxesToConsider[victoryLabelIndex[0]][2] * imageHeight)
-        xMaxAbsolute = int(boxesToConsider[victoryLabelIndex[0]][3] * imageWidth)
-        xMinAbsolute = int(boxesToConsider[victoryLabelIndex[0]][1] * imageWidth)
-
-        randomYPosInRange = random.randint(yMinAbsolute, yMaxAbsolute)
-        randomXPosInRange = random.randint(xMinAbsolute, xMaxAbsolute)
-
-        SetCursorPosition(randomXPosInRange, randomYPosInRange)
-        DoLeftClick()
-        print("\nVictory screen click performed!")
-
-        currentRunState = RunStates.WaitingAtTreasureBox
     elif currentRunState == RunStates.WaitingAtTreasureBox:
-        treasureBoxIndex = [i for i in range(len(classesToConsider)) if classesToConsider[i]
-                            == DetectionClasses.TreasureBox.value]
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.TreasureBox.value, classesToConsider,
+                                                boxesToConsider, screenshot)
 
+        if isClickPerformed:
+            currentRunState = RunStates.AnalyseReceivedItemType
+        else:
+            continue
+
+    elif currentRunState == RunStates.AnalyseReceivedItemType:
         if not IsActionDelayElapsed(3):
             print("\nAction delay NOT elapsed")
             continue
 
-        # [ymin, xmin, ymax, xmax] boxes coordinate format
-        yMinAbsolute = int(boxesToConsider[treasureBoxIndex[0]][0] * imageHeight)
-        yMaxAbsolute = int(boxesToConsider[treasureBoxIndex[0]][2] * imageHeight)
-        xMaxAbsolute = int(boxesToConsider[treasureBoxIndex[0]][3] * imageWidth)
-        xMinAbsolute = int(boxesToConsider[treasureBoxIndex[0]][1] * imageWidth)
+        if IsRuneReceived(classesToConsider):
+            currentRunState = RunStates.ProcessReceivedRune
+        else:
+            currentRunState = RunStates.ProcessReceivedGeneralItem
 
-        randomYPosInRange = random.randint(yMinAbsolute, yMaxAbsolute)
-        randomXPosInRange = random.randint(xMinAbsolute, xMaxAbsolute)
+    elif currentRunState == RunStates.ProcessReceivedGeneralItem:
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Ok.value, classesToConsider,
+                                                boxesToConsider, screenshot)
 
-        SetCursorPosition(randomXPosInRange, randomYPosInRange)
-        DoLeftClick()
-        print("\nTreasure box click performed!")
+        if isClickPerformed:
+            currentRunState = RunStates.TryToRestartFarmRun
+        else:
+            continue
+
+    elif currentRunState == RunStates.ProcessReceivedRune:
+        if isRuneSold is None:
+            isRuneSold = input("Should rune be sold? Enter Y or N")
+
+        if isRuneSold == "Y":
+            isClickPerformed = DoClickOnTargetClass(DetectionClasses.Sell.value, classesToConsider,
+                                                    boxesToConsider, screenshot)
+
+            if isClickPerformed:
+                currentRunState = RunStates.SureToSellRune
+                isRuneSold = None
+            else:
+                continue
+
+        elif isRuneSold == "N":
+            print("Rune kept")
+            isRuneSold = None
+        else:
+            continue
+
+    elif currentRunState == RunStates.SureToSellRune:
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Yes.value, classesToConsider,
+                                                boxesToConsider, screenshot)
+
+        if isClickPerformed:
+            currentRunState = RunStates.TryToRestartFarmRun
+        else:
+            continue
+
+    elif currentRunState == RunStates.TryToRestartFarmRun:
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.ReplayButton.value, classesToConsider,
+                                                boxesToConsider, screenshot)
+
+        if isClickPerformed:
+            currentRunState = RunStates.RunInProgress
+        else:
+            continue
     else:
         continue
 
@@ -106,4 +139,3 @@ while True:
                 runeSubStats = GetRuneSubStats(snippet, False, True)
 
     isDetectionResultConsistent = False
-    currentRunState = RunStates.RunInProgress

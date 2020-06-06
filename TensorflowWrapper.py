@@ -131,3 +131,10 @@ def ReduceDetectionResultsToThreshold(boxes, scores, classes, threshold):
     classesToConsider = classes[0][:detectionCountToConsider]
     boxesToConsider = boxes[0][:detectionCountToConsider]
     return classesToConsider, boxesToConsider
+
+
+class BoxCoordinateFormat(Enum):
+    YMinCoordinate = 0
+    XMinCoordinate = 1
+    YMaxCoordinate = 2
+    XMaxCoordinate = 3
