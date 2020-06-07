@@ -13,12 +13,13 @@ class RunStates(Enum):
     ProcessReceivedRune = 5
     ProcessReceivedGeneralItem = 6
     SureToSellRune = 7
-    TryToRestartFarmRun = 8
-    NotEnoughEnergyDialog = 9
-    EnergyReBuyShop = 10
-    PurchaseWithCrystals = 11
-    PurchaseSuccessful = 12
-    CloseShop = 13
+    TryRestartFarmRun = 8
+    CheckForRequiredEnergyRecharge = 9
+    NotEnoughEnergyDialog = 10
+    EnergyReBuyShop = 11
+    PurchaseWithCrystals = 12
+    PurchaseSuccessful = 13
+    CloseShop = 14
 
 
 def IsActionDelayElapsed(delayInSeconds):

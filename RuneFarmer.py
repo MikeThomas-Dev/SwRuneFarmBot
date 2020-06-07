@@ -1,8 +1,7 @@
-import cv2
+import time
 from SwRuneFarmerProject.TensorflowWrapper import PerformObjectDetection, DetectionClasses, \
     IsDetectionResultConsistent, ReduceDetectionResultsToThreshold
 from SwRuneFarmerProject.WindowsUiUtility import GetWindowHandleByWindowTitle, GetScreenShotFromWindow
-from SwRuneFarmerProject.TesseractUtility import GetRuneTitle, GetRuneMainStat, GetRuneSubStats
 from SwRuneFarmerProject.FarmingStateMachine import RunStates, DoClickOnTargetClass, IsRuneReceived, \
     IsActionDelayElapsed, IsEnergyRechargeRequired
 
@@ -68,8 +67,8 @@ while True:
                                                 boxesToConsider, screenshot)
 
         if isClickPerformed:
-            currentRunState = RunStates.TryToRestartFarmRun
-            print("State:", RunStates.TryToRestartFarmRun.name)
+            currentRunState = RunStates.TryRestartFarmRun
+            print("State:", RunStates.TryRestartFarmRun.name)
         else:
             continue
 
@@ -98,25 +97,26 @@ while True:
                                                 boxesToConsider, screenshot)
 
         if isClickPerformed:
-            currentRunState = RunStates.TryToRestartFarmRun
-            print("State:", RunStates.TryToRestartFarmRun.name)
+            currentRunState = RunStates.TryRestartFarmRun
+            print("State:", RunStates.TryRestartFarmRun.name)
         else:
             continue
 
-    elif currentRunState == RunStates.TryToRestartFarmRun:
+    elif currentRunState == RunStates.TryRestartFarmRun:
         isClickPerformed = DoClickOnTargetClass(DetectionClasses.ReplayButton.value, classesToConsider,
                                                 boxesToConsider, screenshot)
 
         if isClickPerformed:
-            if IsEnergyRechargeRequired(classesToConsider):
-                currentRunState = RunStates.NotEnoughEnergyDialog
-                print("State:", RunStates.NotEnoughEnergyDialog.name)
-            else:
-                currentRunState = RunStates.RunInProgress
-                print("State:", RunStates.RunInProgress.name)
-
+            currentRunState = RunStates.CheckForRequiredEnergyRecharge
+            print("State:", RunStates.CheckForRequiredEnergyRecharge.name)
         else:
             continue
+
+    elif currentRunState == RunStates.CheckForRequiredEnergyRecharge:
+        if IsEnergyRechargeRequired(classesToConsider):
+            currentRunState = RunStates.NotEnoughEnergyDialog
+        else:
+            currentRunState = RunStates.RunInProgress
 
     elif currentRunState == RunStates.NotEnoughEnergyDialog:
         isClickPerformed = DoClickOnTargetClass(DetectionClasses.Shop.value, classesToConsider,
@@ -162,8 +162,8 @@ while True:
                                                 boxesToConsider, screenshot)
 
         if isClickPerformed:
-            currentRunState = RunStates.TryToRestartFarmRun
-            print("State:", RunStates.TryToRestartFarmRun.name)
+            currentRunState = RunStates.TryRestartFarmRun
+            print("State:", RunStates.TryRestartFarmRun.name)
         else:
             continue
 
