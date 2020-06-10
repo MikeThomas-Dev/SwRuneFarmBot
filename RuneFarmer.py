@@ -1,13 +1,11 @@
-import time
 from SwRuneFarmerProject.TensorflowWrapper import PerformObjectDetection, DetectionClasses, \
     IsDetectionResultConsistent, ReduceDetectionResultsToThreshold
 from SwRuneFarmerProject.WindowsUiUtility import GetWindowHandleByWindowTitle, GetScreenShotFromWindow
 from SwRuneFarmerProject.FarmingStateMachine import RunStates, DoClickOnTargetClass, IsRuneReceived, \
     IsActionDelayElapsed, IsEnergyRechargeRequired
+from SwRuneFarmerProject.RuneFactory import CreateRune
 
 detectionScoreThreshold = 0.7
-snippetSizePercentOffset = 0.004
-borderColor = [0, 0, 0]
 
 bluestacksHwnd = GetWindowHandleByWindowTitle("BlueStacks")
 
@@ -73,6 +71,8 @@ while True:
             continue
 
     elif currentRunState == RunStates.ProcessReceivedRune:
+        rune = CreateRune(screenshot, classesToConsider, boxesToConsider)
+
         if isRuneSold is None:
             isRuneSold = input("Should rune be sold? Enter Y or N \n")
 
@@ -169,35 +169,5 @@ while True:
 
     else:
         continue
-
-#    for i in range(classesToConsider.size):
-#        if (classesToConsider[i] == DetectionClasses.Title.value
-#                or classesToConsider[i] == DetectionClasses.MainStat.value
-#                or classesToConsider[i] == DetectionClasses.SubStats.value):
-#            imageHeightOffset = int(imageHeight * snippetSizePercentOffset)
-#            imageWidthOffset = int(imageWidth * snippetSizePercentOffset)
-
-            # [ymin, xmin, ymax, xmax] boxes coordinate format
-#            yMinAbsolute = int(boxesToConsider[i][0] * imageHeight - imageHeightOffset)
-#            yMaxAbsolute = int(boxesToConsider[i][2] * imageHeight + imageHeightOffset)
-#            xMaxAbsolute = int(boxesToConsider[i][3] * imageWidth + imageWidthOffset)
-#            xMinAbsolute = int(boxesToConsider[i][1] * imageWidth - imageWidthOffset)
-#            snippet = screenshot[yMinAbsolute:yMaxAbsolute, xMinAbsolute:xMaxAbsolute, :]
-#            snippet = cv2.cvtColor(snippet, cv2.COLOR_RGB2GRAY)
-            # space added by imageOffset should always be black to ensure no noise is
-            # added to the real string
-#            snippet = cv2.copyMakeBorder(snippet,
-#                                         imageHeightOffset,
-#                                         imageHeightOffset,
-#                                         imageWidthOffset,
-#                                         imageWidthOffset,
-#                                         cv2.BORDER_CONSTANT, value=borderColor)
-
-#            if classesToConsider[i] == DetectionClasses.Title.value:
-#                runeTitle = GetRuneTitle(snippet, False, True)
-#            elif classesToConsider[i] == DetectionClasses.MainStat.value:
-#                runeMainStat = GetRuneMainStat(snippet, False, True)
-#            elif classesToConsider[i] == DetectionClasses.SubStats.value:
-#                runeSubStats = GetRuneSubStats(snippet, False, True)
 
     isDetectionResultConsistent = False

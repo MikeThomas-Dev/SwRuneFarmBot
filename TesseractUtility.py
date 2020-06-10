@@ -6,8 +6,8 @@ import pytesseract as tesseract
 
 tesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-configTitleAndMainStat = ('-l eng --oem 1 --psm 7')
-configSubStats = ('-l eng --oem 1 --psm 6')
+configTitleAndMainStat = '-l eng --oem 1 --psm 7'
+configSubStats = '-l eng --oem 1 --psm 6'
 kernel = np.ones((1, 1), np.uint8)
 
 

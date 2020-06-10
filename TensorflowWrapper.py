@@ -49,7 +49,6 @@ class DetectionClasses(Enum):
     PurchaseSuccessDialog = 21
 
 
-
 # Load the label map.
 # Label maps map indices to category names, so that when our convolution
 # network predicts `5`, we know that this corresponds to `king`.
