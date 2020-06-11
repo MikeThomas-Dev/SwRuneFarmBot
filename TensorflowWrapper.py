@@ -22,7 +22,7 @@ PATH_TO_CKPT = os.path.join(CWD_PATH, '..\\' + MODEL_NAME, 'frozen_inference_gra
 PATH_TO_LABELS = os.path.join(CWD_PATH, '..\\training', 'labelmap.pbtxt')
 
 # Number of classes the object detector can identify
-NUM_CLASSES = 7
+NUM_CLASSES = 21
 
 
 class DetectionClasses(Enum):
@@ -137,3 +137,17 @@ class BoxCoordinateFormat(Enum):
     XMinCoordinate = 1
     YMaxCoordinate = 2
     XMaxCoordinate = 3
+
+
+def GetClassIndexByClass(searchedClass, detectedClasses):
+    classIndexCollection = [i for i in range(len(detectedClasses)) if detectedClasses[i] == searchedClass.value]
+    # first result is used in the case of multiple matching detections as it is the one with the highest detection score
+    return classIndexCollection[0]
+
+
+def GetAbsoluteBoxCoordinatesByClassIndex(classIndex, detectedBoxes, imageHeight, imageWidth):
+    yMinAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.YMinCoordinate.value] * imageHeight)
+    yMaxAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.YMaxCoordinate.value] * imageHeight)
+    xMinAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.XMinCoordinate.value] * imageWidth)
+    xMaxAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.XMaxCoordinate.value] * imageWidth)
+    return yMinAbsolute, yMaxAbsolute, xMinAbsolute, xMaxAbsolute

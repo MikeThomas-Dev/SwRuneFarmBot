@@ -30,8 +30,8 @@ while True:
     imageHeight, imageWidth, colorChannel = screenshot.shape
 
     if currentRunState == RunStates.RunInProgress:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.VictoryLabel.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.VictoryLabel, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.WaitingAtTreasureBox
@@ -40,8 +40,8 @@ while True:
             continue
 
     elif currentRunState == RunStates.WaitingAtTreasureBox:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.TreasureBox.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.TreasureBox, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.AnalyseReceivedItemType
@@ -61,8 +61,8 @@ while True:
             print("State:", RunStates.ProcessReceivedGeneralItem.name)
 
     elif currentRunState == RunStates.ProcessReceivedGeneralItem:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Ok.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Ok, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.TryRestartFarmRun
@@ -77,8 +77,8 @@ while True:
             isRuneSold = input("Should rune be sold? Enter Y or N \n")
 
         if isRuneSold == "Y":
-            isClickPerformed = DoClickOnTargetClass(DetectionClasses.Sell.value, classesToConsider,
-                                                    boxesToConsider, screenshot)
+            isClickPerformed = DoClickOnTargetClass(DetectionClasses.Sell, classesToConsider, boxesToConsider,
+                                                    screenshot)
 
             if isClickPerformed:
                 currentRunState = RunStates.SureToSellRune
@@ -93,8 +93,8 @@ while True:
             continue
 
     elif currentRunState == RunStates.SureToSellRune:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Yes.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Yes, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.TryRestartFarmRun
@@ -103,8 +103,8 @@ while True:
             continue
 
     elif currentRunState == RunStates.TryRestartFarmRun:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.ReplayButton.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.ReplayButton, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.CheckForRequiredEnergyRecharge
@@ -119,8 +119,8 @@ while True:
             currentRunState = RunStates.RunInProgress
 
     elif currentRunState == RunStates.NotEnoughEnergyDialog:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Shop.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Shop, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.EnergyReBuyShop
@@ -129,8 +129,8 @@ while True:
             continue
 
     elif currentRunState == RunStates.EnergyReBuyShop:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.RechargeEnergyTile.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.RechargeEnergyTile, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.PurchaseWithCrystals
@@ -139,8 +139,8 @@ while True:
             continue
 
     elif currentRunState == RunStates.PurchaseWithCrystals:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Yes.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Yes, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.PurchaseSuccessful
@@ -148,8 +148,8 @@ while True:
         else:
             continue
     elif currentRunState == RunStates.PurchaseSuccessful:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Ok.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Ok, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.CloseShop
@@ -158,8 +158,8 @@ while True:
             continue
 
     elif currentRunState == RunStates.CloseShop:
-        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Close.value, classesToConsider,
-                                                boxesToConsider, screenshot)
+        isClickPerformed = DoClickOnTargetClass(DetectionClasses.Close, classesToConsider, boxesToConsider,
+                                                screenshot)
 
         if isClickPerformed:
             currentRunState = RunStates.TryRestartFarmRun

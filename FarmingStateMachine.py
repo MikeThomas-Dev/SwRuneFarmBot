@@ -2,7 +2,8 @@ from enum import Enum
 import time
 import random
 from SwRuneFarmerProject.WindowsUiUtility import SetCursorPosition, DoLeftClick
-from SwRuneFarmerProject.TensorflowWrapper import BoxCoordinateFormat, DetectionClasses
+from SwRuneFarmerProject.TensorflowWrapper import DetectionClasses, GetClassIndexByClass, \
+    GetAbsoluteBoxCoordinatesByClassIndex
 
 
 class RunStates(Enum):
@@ -38,19 +39,15 @@ IsActionDelayElapsed.actionDelayStartTime = None
 
 
 def DoClickOnTargetClass(classToClick, detectedClasses, detectedBoxes, screenshot):
-    classIndexCollection = [i for i in range(len(detectedClasses)) if detectedClasses[i] == classToClick]
-    # first result is used in the case of multiple matching detections as it is the one with the highest detection score
-    classIndex = classIndexCollection[0]
-
     if not IsActionDelayElapsed(3):
         return False
 
+    classIndex = GetClassIndexByClass(classToClick, detectedClasses)
+
     imageHeight, imageWidth, colorChannel = screenshot.shape
 
-    yMinAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.YMinCoordinate.value] * imageHeight)
-    yMaxAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.YMaxCoordinate.value] * imageHeight)
-    xMinAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.XMinCoordinate.value] * imageWidth)
-    xMaxAbsolute = int(detectedBoxes[classIndex][BoxCoordinateFormat.XMaxCoordinate.value] * imageWidth)
+    yMinAbsolute, yMaxAbsolute, xMinAbsolute, xMaxAbsolute =\
+        GetAbsoluteBoxCoordinatesByClassIndex(classIndex, detectedBoxes, imageHeight, imageWidth)
 
     randomYCoordinateInBox = random.randint(yMinAbsolute, yMaxAbsolute)
     randomXCoordinateInBox = random.randint(xMinAbsolute, xMaxAbsolute)
