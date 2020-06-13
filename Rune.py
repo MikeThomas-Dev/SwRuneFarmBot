@@ -11,6 +11,7 @@ class Rune:
         self.inputMainStat = mainStat
         self.inputSubStats = subStats
         self.__processTitle(title)
+        self.__processMainStat(mainStat)
 
     def __processTitle(self, title):
         self.isTitleValid = True if Rune.titleFormatRegex.fullmatch(title) else False
@@ -29,7 +30,7 @@ class Rune:
             self.position = Rune.Slot[splitTitle[3]]
 
     def __processMainStat(self, mainStat):
-        mainStat = Stat(mainStat)
+        self.mainStat = Stat(mainStat)
 
     Type = Enum(
         value='Type',
