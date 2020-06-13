@@ -7,7 +7,7 @@ class Stat:
     percentageStatRegex = regex.compile(r"%$")
 
     def __init__(self, stat):
-        self.isValid = True if Stat.statFormatRegex.fullmatch(stat) else self.isValid = False
+        self.isValid = True if Stat.statFormatRegex.fullmatch(stat) else False
         if not self.isValid:
             return
 
@@ -15,7 +15,7 @@ class Stat:
         self.__initializeIsFlatValue(stat)
 
     def __initializeIsFlatValue(self, stat):
-        self.isFlatValue = False if Stat.percentageStatRegex.fullmatch(stat) else self.isFlatValue = True
+        self.isFlatValue = False if Stat.percentageStatRegex.fullmatch(stat) else True
 
     def __initializeType(self, stat):
         statType = stat.split('+').rstrip()

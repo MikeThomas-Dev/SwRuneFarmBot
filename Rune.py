@@ -13,7 +13,7 @@ class Rune:
         self.__processTitle(title)
 
     def __processTitle(self, title):
-        self.isTitleValid = True if Rune.titleFormatRegex.fullmatch(title) else self.isTitleValid = False
+        self.isTitleValid = True if Rune.titleFormatRegex.fullmatch(title) else False
         if not self.isTitleValid:
             self.type = None
             self.position = None
