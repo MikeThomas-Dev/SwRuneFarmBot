@@ -21,12 +21,12 @@ class Rune:
 
         splitTitle = title.split()
         splitTitleLen = len(splitTitle)
-        if splitTitleLen == 2:
+        if splitTitleLen == 3:
             self.type = Rune.Type[splitTitle[0]]
-            self.position = Rune.Slot[splitTitle[1]]
-        elif splitTitleLen == 3:
-            self.type = Rune.Type[splitTitle[1]]
             self.position = Rune.Slot[splitTitle[2]]
+        elif splitTitleLen == 4:
+            self.type = Rune.Type[splitTitle[1]]
+            self.position = Rune.Slot[splitTitle[3]]
 
     def __processMainStat(self, mainStat):
         mainStat = Stat(mainStat)
