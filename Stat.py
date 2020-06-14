@@ -21,7 +21,7 @@ class Stat:
         self.__initializeValue(stat)
 
     def __initializeIsFlatValue(self, stat):
-        self.IsFlatValue = True if Stat.percentageStatRegex.match(stat) else False
+        self.IsFlatValue = False if Stat.percentageStatRegex.match(stat) else True
 
     def __initializeType(self, stat):
         typeAsString = stat.split('+', 1)[0].rstrip()

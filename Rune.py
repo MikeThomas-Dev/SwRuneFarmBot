@@ -1,6 +1,6 @@
 from enum import Enum
 import re as regex
-from SwRuneFarmerProject.Stat import Stat
+from SwRuneFarmerProject.Stat import Stat, StatType
 
 
 class Rune:
@@ -12,25 +12,89 @@ class Rune:
         self.inputSubStats = subStats
         self.__processTitle(title)
         self.__processMainStat(mainStat)
+        self.__processSubStats(subStats)
+
+    @property
+    def ShouldRuneBeSold(self):
+        if self.mainStat.IsValid and not self.__isSixStarRune():
+            print("Rune sold because it is not six star")
+            return True
+
+        if self.__isGradeLowerThanHero():
+            print("Rune sold because grade is lower than hero")
+            return True
+
+        if self.isTitleValid and self.mainStat.IsValid and self.__isFlatValueOnPercentSlot:
+            print("Rune sold because it has flat value on percentage slot")
+            return True
+
+        return False
 
     def __processTitle(self, title):
         self.isTitleValid = True if Rune.titleFormatRegex.fullmatch(title) else False
         if not self.isTitleValid:
             self.type = None
-            self.position = None
+            self.slot = None
             return
 
         splitTitle = title.split()
         splitTitleLen = len(splitTitle)
         if splitTitleLen == 3:
             self.type = Rune.Type[splitTitle[0]]
-            self.position = Rune.Slot[splitTitle[2]]
+            self.slot = Rune.Slot[splitTitle[2]]
         elif splitTitleLen == 4:
             self.type = Rune.Type[splitTitle[1]]
-            self.position = Rune.Slot[splitTitle[3]]
+            self.slot = Rune.Slot[splitTitle[3]]
 
     def __processMainStat(self, mainStat):
         self.mainStat = Stat(mainStat)
+
+    def __processSubStats(self, subStats):
+        self.subStats = []
+        splitSubStats = subStats.splitlines()
+        self.grade = self.Grade(len(splitSubStats))
+
+        for subStat in splitSubStats:
+            self.subStats.append(Stat(subStat))
+
+    def __isSixStarRune(self):
+        if self.mainStat.Value == 7 and (self.mainStat.Type == StatType.Spd
+                                         or self.mainStat.Type == StatType.CritRate):
+            return True
+        elif self.mainStat.Value == 11 and (self.mainStat.Type == StatType.Hp
+                                            or self.mainStat.Type == StatType.Atk
+                                            or self.mainStat.Type == StatType.Def
+                                            or self.mainStat.Type == StatType.CritDmg):
+            return True
+        elif self.mainStat.Value == 12 and (self.mainStat.Type == StatType.Resistance
+                                            or self.mainStat.Type == StatType.Accuracy):
+            return True
+        elif self.mainStat.Value == 22 and (self.mainStat.Type == StatType.FlatAtk
+                                            or self.mainStat.Type == StatType.FlatDef):
+            return True
+        elif self.mainStat.Value == 360 and self.mainStat.Type == StatType.FlatHp:
+            return True
+        else:
+            return False
+
+    def __isGradeLowerThanHero(self):
+        result = False if self.grade == Rune.Grade.Hero or self.grade == Rune.Grade.Legendary else True
+        return result
+
+    @property
+    def __isFlatValueOnPercentSlot(self):
+        if self.mainStat.IsFlatValue \
+                and self.mainStat.Type is not StatType.Spd \
+                and (self.slot == self.Slot["TopRight"]
+                     or self.slot == self.Slot["TopLeft"]
+                     or self.slot == self.Slot["Bottom"]):
+            return True
+        else:
+            return False
+
+    @property
+    def __areSubStatsValid(self):
+        return all(subStat.IsValid for subStat in self.subStats)
 
     Type = Enum(
         value='Type',
@@ -76,3 +140,10 @@ class Rune:
             ('(6)', 6),
         ]
     )
+
+    class Grade(Enum):
+        Normal = 0
+        Magic = 1
+        Rare = 2
+        Hero = 3
+        Legendary = 4

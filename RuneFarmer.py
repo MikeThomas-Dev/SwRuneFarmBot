@@ -11,7 +11,6 @@ bluestacksHwnd = GetWindowHandleByWindowTitle("BlueStacks")
 
 currentRunState = RunStates.RunInProgress
 
-isRuneSold = None
 print("Farming started")
 
 while True:
@@ -73,24 +72,17 @@ while True:
     elif currentRunState == RunStates.ProcessReceivedRune:
         rune = CreateRune(screenshot, classesToConsider, boxesToConsider)
 
-        if isRuneSold is None:
-            isRuneSold = input("Should rune be sold? Enter Y or N \n")
-
-        if isRuneSold == "Y":
+        if rune.ShouldRuneBeSold:
             isClickPerformed = DoClickOnTargetClass(DetectionClasses.Sell, classesToConsider, boxesToConsider,
                                                     screenshot)
 
             if isClickPerformed:
                 currentRunState = RunStates.SureToSellRune
                 print("State:", RunStates.SureToSellRune.name)
-                isRuneSold = None
             else:
                 continue
-
-        elif isRuneSold == "N":
-            isRuneSold = None
         else:
-            continue
+            print("")
 
     elif currentRunState == RunStates.SureToSellRune:
         isClickPerformed = DoClickOnTargetClass(DetectionClasses.Yes, classesToConsider, boxesToConsider,
