@@ -51,9 +51,9 @@ class Stat:
 
     def __initializeValue(self, stat):
         if self.IsFlatValue:
-            self.Value = stat.split('+', 1)[1]
+            self.Value = int(stat.split('+', 1)[1])
         else:
-            self.Value = stat[stat.find('+') + 1: stat.find('%')]
+            self.Value = int(stat[stat.find('+') + 1: stat.find('%')])
 
 
 class StatType(Enum):
