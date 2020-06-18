@@ -16,7 +16,7 @@ class Rune:
 
     @property
     def ShouldRuneBeSold(self):
-        if self.mainStat.IsValid and not self.__isSixStarRune():
+        if not self.__isConfirmedSixStarRune():
             print("Rune sold because it is not six star")
             return True
 
@@ -24,7 +24,7 @@ class Rune:
             print("Rune sold because grade is lower than hero")
             return True
 
-        if self.isTitleValid and self.mainStat.IsValid and self.__isFlatValueOnPercentSlot:
+        if self.isTitleValid and self.mainStat.IsValid and self.__isConfirmedFlatValueOnPercentSlot:
             print("Rune sold because it has flat value on percentage slot")
             return True
 
@@ -57,7 +57,10 @@ class Rune:
         for subStat in splitSubStats:
             self.subStats.append(Stat(subStat))
 
-    def __isSixStarRune(self):
+    def __isConfirmedSixStarRune(self):
+        if not self.mainStat.IsValid:
+            return False
+
         if self.mainStat.Value == 7 and (self.mainStat.Type == StatType.Spd
                                          or self.mainStat.Type == StatType.CritRate):
             return True
@@ -82,7 +85,10 @@ class Rune:
         return result
 
     @property
-    def __isFlatValueOnPercentSlot(self):
+    def __isConfirmedFlatValueOnPercentSlot(self):
+        if not self.isTitleValid or not self.mainStat.IsValid:
+            return False
+
         if self.mainStat.IsFlatValue \
                 and self.mainStat.Type is not StatType.Spd \
                 and (self.slot == self.Slot["TopRight"]
