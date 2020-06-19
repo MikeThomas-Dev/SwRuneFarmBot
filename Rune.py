@@ -24,7 +24,7 @@ class Rune:
             print("Rune sold because grade is lower than hero")
             return True
 
-        if self.__isConfirmedFlatValueOnPercentSlot:
+        if self.__isConfirmedFlatValueOnPercentSlot():
             print("Rune sold because it has flat value on percentage slot")
             return True
 
@@ -84,7 +84,6 @@ class Rune:
         result = False if self.grade == Rune.Grade.Hero or self.grade == Rune.Grade.Legendary else True
         return result
 
-    @property
     def __isConfirmedFlatValueOnPercentSlot(self):
         if not self.isTitleValid or not self.mainStat.IsValid:
             return False

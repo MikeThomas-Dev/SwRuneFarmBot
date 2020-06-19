@@ -34,3 +34,26 @@ def fix_GradeLowerThanHero():
 @pytest.mark.parametrize("testee", fix_GradeLowerThanHero())
 def test_IsGradeLowerThanHero(testee):
     assert testee[0]._Rune__isGradeLowerThanHero() == testee[1]
+
+
+@pytest.fixture
+def fix_IsConfirmedFlatValueOnPercentSlot():
+    return {(Rune("Mortal Focus Rune (2)", "HP +11%", ""), False),
+            (Rune("Focus Rune (4)", "DEF +11%", ""), False),
+            (Rune("Strong Focus Rune (3)", "DEF +22", ""), False),
+            (Rune("Tenacious Energy Rune (5)", "HP +360", ""), False),
+            (Rune("Blade Rune (2)", "SPD +7", ""), False),
+            (Rune("Enhance Rune (2)", "DEF +22", ""), True),
+            (Rune("Intricate Blade Rune (4)", "DEF +22", ""), True),
+            (Rune("Blade Rune (6)", "ATK +22", ""), True),
+            (Rune("Blade Rune 6)", "ATK +22", ""), False),
+            (Rune("Blade Rune (6", "ATK +22", ""), False),
+            (Rune("Blade Rune (/)", "ATK +22", ""), False),
+            (Rune("Rune (6)", "ATK +22", ""), False),
+            (Rune("@ASjd765", "ATK +22", ""), False),
+            (Rune("Blade Rune (6)", "ATK +22@", ""), False)}
+
+
+@pytest.mark.parametrize("testee", fix_IsConfirmedFlatValueOnPercentSlot())
+def test_IsConfirmedFlatValueOnPercentSlot(testee):
+    assert testee[0]._Rune__isConfirmedFlatValueOnPercentSlot() == testee[1]
