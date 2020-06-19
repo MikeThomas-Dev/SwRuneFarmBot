@@ -3,7 +3,7 @@ from enum import Enum
 
 
 class Stat:
-    statFormatRegex = regex.compile(r"^([A-Za-z]+\s){1,2}\+\d+%?$")
+    statFormatRegex = regex.compile(r"^(HP|ATK|DEF|SPD|CRI Rate|CRI Dmg|Resistance|Accuracy)\s\+\d+%?$")
     percentageStatRegex = regex.compile(r".+%$")
 
     def __init__(self, stat):

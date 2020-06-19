@@ -24,7 +24,7 @@ class Rune:
             print("Rune sold because grade is lower than hero")
             return True
 
-        if self.isTitleValid and self.mainStat.IsValid and self.__isConfirmedFlatValueOnPercentSlot:
+        if self.__isConfirmedFlatValueOnPercentSlot:
             print("Rune sold because it has flat value on percentage slot")
             return True
 
