@@ -11,7 +11,6 @@ class Stat:
         if not self.IsValid:
             self.Type = None
             self.IsFlatValue = None
-            self.Type = None
             self.Value = None
             return
 

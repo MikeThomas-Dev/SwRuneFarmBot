@@ -1,6 +1,7 @@
 from enum import Enum
 import re as regex
 from SwRuneFarmerProject.Stat import Stat, StatType
+from SwRuneFarmerProject.SubStat import SubStat
 
 
 class Rune:
@@ -16,15 +17,15 @@ class Rune:
 
     @property
     def ShouldRuneBeSold(self):
-        if not self.__isConfirmedSixStarRune():
+        if self.__isSixStarRune() == self.EvaluationResult.Negative:
             print("Rune sold because it is not six star")
             return True
 
-        if self.__isGradeLowerThanHero():
+        if self.__isGradeLowerThanHero() == self.EvaluationResult.Positive:
             print("Rune sold because grade is lower than hero")
             return True
 
-        if self.__isConfirmedFlatValueOnPercentSlot():
+        if self.__isFlatValueOnPercentSlot() == self.EvaluationResult.Positive:
             print("Rune sold because it has flat value on percentage slot")
             return True
 
@@ -55,51 +56,50 @@ class Rune:
         self.grade = self.Grade(len(splitSubStats))
 
         for subStat in splitSubStats:
-            self.subStats.append(Stat(subStat))
+            self.subStats.append(SubStat(subStat))
 
-    def __isConfirmedSixStarRune(self):
-        if not self.mainStat.IsValid:
-            return False
-
-        if self.mainStat.Value == 7 and (self.mainStat.Type == StatType.Spd
-                                         or self.mainStat.Type == StatType.CritRate):
-            return True
-        elif self.mainStat.Value == 11 and (self.mainStat.Type == StatType.Hp
-                                            or self.mainStat.Type == StatType.Atk
-                                            or self.mainStat.Type == StatType.Def
-                                            or self.mainStat.Type == StatType.CritDmg):
-            return True
-        elif self.mainStat.Value == 12 and (self.mainStat.Type == StatType.Resistance
-                                            or self.mainStat.Type == StatType.Accuracy):
-            return True
-        elif self.mainStat.Value == 22 and (self.mainStat.Type == StatType.FlatAtk
-                                            or self.mainStat.Type == StatType.FlatDef):
-            return True
-        elif self.mainStat.Value == 360 and self.mainStat.Type == StatType.FlatHp:
-            return True
+    def __isSixStarRune(self):
+        if self.mainStat.IsValid:
+            if self.mainStat.Value == 7 and (self.mainStat.Type == StatType.Spd
+                                             or self.mainStat.Type == StatType.CritRate):
+                return self.EvaluationResult.Positive
+            elif self.mainStat.Value == 11 and (self.mainStat.Type == StatType.Hp
+                                                or self.mainStat.Type == StatType.Atk
+                                                or self.mainStat.Type == StatType.Def
+                                                or self.mainStat.Type == StatType.CritDmg):
+                return self.EvaluationResult.Positive
+            elif self.mainStat.Value == 12 and (self.mainStat.Type == StatType.Resistance
+                                                or self.mainStat.Type == StatType.Accuracy):
+                return self.EvaluationResult.Positive
+            elif self.mainStat.Value == 22 and (self.mainStat.Type == StatType.FlatAtk
+                                                or self.mainStat.Type == StatType.FlatDef):
+                return self.EvaluationResult.Positive
+            elif self.mainStat.Value == 360 and self.mainStat.Type == StatType.FlatHp:
+                return self.EvaluationResult.Positive
+            else:
+                return self.EvaluationResult.Negative
+        elif any(subStat.IsValid and subStat.IsSubStatValueTooLowForSixStar for subStat in self.subStats):
+            return self.EvaluationResult.Negative
         else:
-            return False
+            return self.EvaluationResult.Invalid
 
     def __isGradeLowerThanHero(self):
-        result = False if self.grade == Rune.Grade.Hero or self.grade == Rune.Grade.Legendary else True
+        result = self.EvaluationResult.Negative if self.grade == Rune.Grade.Hero or self.grade == Rune.Grade.Legendary \
+            else self.EvaluationResult.Positive
         return result
 
-    def __isConfirmedFlatValueOnPercentSlot(self):
+    def __isFlatValueOnPercentSlot(self):
         if not self.isTitleValid or not self.mainStat.IsValid:
-            return False
+            return self.EvaluationResult.Invalid
 
         if self.mainStat.IsFlatValue \
                 and self.mainStat.Type is not StatType.Spd \
                 and (self.slot == self.Slot["TopRight"]
                      or self.slot == self.Slot["TopLeft"]
                      or self.slot == self.Slot["Bottom"]):
-            return True
+            return self.EvaluationResult.Positive
         else:
-            return False
-
-    @property
-    def __areSubStatsValid(self):
-        return all(subStat.IsValid for subStat in self.subStats)
+            return self.EvaluationResult.Negative
 
     Type = Enum(
         value='Type',
@@ -152,3 +152,8 @@ class Rune:
         Rare = 2
         Hero = 3
         Legendary = 4
+
+    class EvaluationResult(Enum):
+        Positive = 0
+        Negative = 1
+        Invalid = 2
