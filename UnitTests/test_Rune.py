@@ -79,3 +79,17 @@ def fix_IsHeroRuneWithMoreThanTwoFlatSubStats():
 def test_IsHeroRuneWithMoreThanTwoFlatSubStats(testee):
     assert testee[0]._Rune__isHeroRuneWithMoreThanTwoFlatSubStats() == testee[1]
 
+
+@pytest.fixture
+def fix_IsHeroRuneWithSpdSubStat():
+    return {(Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%\nDEF +20"), Rune.EvaluationResult.Invalid),
+            (Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%\nSPD +5"), Rune.EvaluationResult.Invalid),
+            (Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%"), Rune.EvaluationResult.Negative),
+            (Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nSPD +5"), Rune.EvaluationResult.Positive),
+            (Rune("", "", "XYZ\nCRI Dmg +7%\nSPD +5"), Rune.EvaluationResult.Positive),
+            (Rune("", "", "XYZ\nCRI Dmg +7%\nCRI Rate +6%"), Rune.EvaluationResult.Invalid)}
+
+
+@pytest.mark.parametrize("testee", fix_IsHeroRuneWithSpdSubStat())
+def test_IsHeroRuneWithoutSpdSubStat(testee):
+    assert testee[0]._Rune__isHeroRuneWithSpdSubStat() == testee[1]
