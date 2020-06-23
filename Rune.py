@@ -29,6 +29,10 @@ class Rune:
             print("Rune sold because it has flat value on percentage slot")
             return True
 
+        if self.__isHeroRuneWithMoreThanTwoFlatSubStats() == self.EvaluationResult.Positive:
+            print("Rune sold because it has grade hero and has more than two flat value sub stats")
+            return True
+
         return False
 
     def __processTitle(self, title):
@@ -100,6 +104,15 @@ class Rune:
             return self.EvaluationResult.Positive
         else:
             return self.EvaluationResult.Negative
+
+    def __isHeroRuneWithMoreThanTwoFlatSubStats(self):
+        flatSubStatCount = len([subStat for subStat in self.subStats if
+                                subStat.IsValid and
+                                subStat.IsFlatValue and
+                                subStat.Type is not StatType.Spd])
+
+        return self.EvaluationResult.Positive if self.grade == self.Grade.Hero and flatSubStatCount >= 2 \
+            else self.EvaluationResult.Negative
 
     Type = Enum(
         value='Type',

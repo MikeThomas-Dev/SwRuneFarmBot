@@ -63,3 +63,19 @@ def fix_IsConfirmedFlatValueOnPercentSlot():
 @pytest.mark.parametrize("testee", fix_IsConfirmedFlatValueOnPercentSlot())
 def test_IsConfirmedFlatValueOnPercentSlot(testee):
     assert testee[0]._Rune__isFlatValueOnPercentSlot() == testee[1]
+
+
+@pytest.fixture
+def fix_IsHeroRuneWithMoreThanTwoFlatSubStats():
+    return {(Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%"), Rune.EvaluationResult.Negative),
+            (Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nATK +20"), Rune.EvaluationResult.Negative),
+            (Rune("", "", "SPD +5\nATK +20\nResistance +6%"), Rune.EvaluationResult.Negative),
+            (Rune("", "", "DEF +20\nATK +20\nResistance +6%"), Rune.EvaluationResult.Positive),
+            (Rune("", "", "DEF +20\nATK +20\nXYZ"), Rune.EvaluationResult.Positive),
+            (Rune("", "", "DEF +20\nXYZ\nXYZ"), Rune.EvaluationResult.Negative)}
+
+
+@pytest.mark.parametrize("testee", fix_IsHeroRuneWithMoreThanTwoFlatSubStats())
+def test_IsHeroRuneWithMoreThanTwoFlatSubStats(testee):
+    assert testee[0]._Rune__isHeroRuneWithMoreThanTwoFlatSubStats() == testee[1]
+
