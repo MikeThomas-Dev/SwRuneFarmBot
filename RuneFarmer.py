@@ -79,7 +79,15 @@ while True:
             else:
                 continue
         else:
-            print("")
+            isClickPerformed = DoClickOnTargetClass(DetectionClasses.Ok, classesToConsider, boxesToConsider,
+                                                    screenshot)
+
+            if isClickPerformed:
+                print("Rune has been taken")
+                currentRunState = RunStates.TryRestartFarmRun
+                print("State:", RunStates.TryRestartFarmRun.name)
+            else:
+                continue
 
     elif currentRunState == RunStates.SureToSellRune:
         isClickPerformed = DoClickOnTargetClass(DetectionClasses.Yes, classesToConsider, boxesToConsider,
