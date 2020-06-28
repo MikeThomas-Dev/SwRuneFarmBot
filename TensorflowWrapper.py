@@ -139,10 +139,15 @@ class BoxCoordinateFormat(Enum):
     XMaxCoordinate = 3
 
 
-def GetClassIndexByClass(searchedClass, detectedClasses):
+def TryGetClassIndexByClass(searchedClass, detectedClasses):
     classIndexCollection = [i for i in range(len(detectedClasses)) if detectedClasses[i] == searchedClass.value]
+
+    if not classIndexCollection:
+        print("Required class not found detected classes - resetting click action")
+        return False, None
+
     # first result is used in the case of multiple matching detections as it is the one with the highest detection score
-    return classIndexCollection[0]
+    return True, classIndexCollection[0]
 
 
 def GetAbsoluteBoxCoordinatesByClassIndex(classIndex, detectedBoxes, imageHeight, imageWidth):

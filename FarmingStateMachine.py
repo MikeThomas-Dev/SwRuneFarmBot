@@ -2,7 +2,7 @@ from enum import Enum
 import time
 import random
 from SwRuneFarmerProject.WindowsUiUtility import SetCursorPosition, DoLeftClick
-from SwRuneFarmerProject.TensorflowWrapper import DetectionClasses, GetClassIndexByClass, \
+from SwRuneFarmerProject.TensorflowWrapper import DetectionClasses, TryGetClassIndexByClass, \
     GetAbsoluteBoxCoordinatesByClassIndex
 
 
@@ -42,7 +42,10 @@ def DoClickOnTargetClass(classToClick, detectedClasses, detectedBoxes, screensho
     if not IsActionDelayElapsed(3):
         return False
 
-    classIndex = GetClassIndexByClass(classToClick, detectedClasses)
+    isClassIndexExistent, classIndex = TryGetClassIndexByClass(classToClick, detectedClasses)
+
+    if not isClassIndexExistent:
+        return False
 
     imageHeight, imageWidth, colorChannel = screenshot.shape
 

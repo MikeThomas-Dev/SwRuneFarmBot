@@ -1,6 +1,6 @@
 import cv2
 from SwRuneFarmerProject.Rune import Rune
-from SwRuneFarmerProject.TensorflowWrapper import DetectionClasses, GetClassIndexByClass, \
+from SwRuneFarmerProject.TensorflowWrapper import DetectionClasses, TryGetClassIndexByClass, \
     GetAbsoluteBoxCoordinatesByClassIndex
 from SwRuneFarmerProject.TesseractUtility import GetRuneTitle, GetRuneMainStat, GetRuneSubStats
 
@@ -33,7 +33,7 @@ def CreateRune(screenshot, detectedClasses, detectedBoxes):
 
 def getScreenShotSnippetByClass(searchedClass, screenshot, detectedClasses, detectedBoxes, imageHeight, imageWidth,
                                 imageHeightOffset, imageWidthOffset):
-    classIndex = GetClassIndexByClass(searchedClass, detectedClasses)
+    _, classIndex = TryGetClassIndexByClass(searchedClass, detectedClasses)
 
     yMinAbsolute, yMaxAbsolute, xMinAbsolute, xMaxAbsolute =\
         GetAbsoluteBoxCoordinatesByClassIndex(classIndex, detectedBoxes, imageHeight, imageWidth)
