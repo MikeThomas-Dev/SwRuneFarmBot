@@ -120,7 +120,7 @@ def IsDetectionResultConsistent(detectedClasses):
     return False
 
 
-IsDetectionResultConsistent.REQUIREDCONSISTENTDETECTIONS = 5
+IsDetectionResultConsistent.REQUIREDCONSISTENTDETECTIONS = 3
 IsDetectionResultConsistent.consistentDetectionCounter = 0
 IsDetectionResultConsistent.lastDetectedClasses = None
 

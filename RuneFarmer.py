@@ -46,7 +46,7 @@ while True:
             continue
 
     elif currentRunState == RunStates.AnalyseReceivedItemType:
-        if not IsActionDelayElapsed(3):
+        if not IsActionDelayElapsed():
             continue
 
         if IsRuneReceived(classesToConsider):

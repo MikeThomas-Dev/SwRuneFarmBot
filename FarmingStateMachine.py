@@ -23,7 +23,7 @@ class RunStates(Enum):
     CloseShop = 14
 
 
-def IsActionDelayElapsed(delayInSeconds):
+def IsActionDelayElapsed(delayInSeconds=2):
     if IsActionDelayElapsed.actionDelayStartTime is None:
         IsActionDelayElapsed.actionDelayStartTime = time.time()
         return False
@@ -39,7 +39,7 @@ IsActionDelayElapsed.actionDelayStartTime = None
 
 
 def DoClickOnTargetClass(classToClick, detectedClasses, detectedBoxes, screenshot):
-    if not IsActionDelayElapsed(3):
+    if not IsActionDelayElapsed():
         return False
 
     isClassIndexExistent, classIndex = TryGetClassIndexByClass(classToClick, detectedClasses)
@@ -49,7 +49,7 @@ def DoClickOnTargetClass(classToClick, detectedClasses, detectedBoxes, screensho
 
     imageHeight, imageWidth, colorChannel = screenshot.shape
 
-    yMinAbsolute, yMaxAbsolute, xMinAbsolute, xMaxAbsolute =\
+    yMinAbsolute, yMaxAbsolute, xMinAbsolute, xMaxAbsolute = \
         GetAbsoluteBoxCoordinatesByClassIndex(classIndex, detectedBoxes, imageHeight, imageWidth)
 
     randomYCoordinateInBox = random.randint(yMinAbsolute, yMaxAbsolute)
