@@ -5,6 +5,8 @@ from SwRuneFarmerProject.WindowsUiUtility import SetCursorPosition, DoLeftClick
 from SwRuneFarmerProject.TensorflowWrapper import DetectionClasses, TryGetClassIndexByClass, \
     GetAbsoluteBoxCoordinatesByClassIndex
 
+INACCURARY_OFFSET = 0.03
+
 
 class RunStates(Enum):
     RunInProgress = 1
@@ -52,8 +54,11 @@ def DoClickOnTargetClass(classToClick, detectedClasses, detectedBoxes, screensho
     yMinAbsolute, yMaxAbsolute, xMinAbsolute, xMaxAbsolute = \
         GetAbsoluteBoxCoordinatesByClassIndex(classIndex, detectedBoxes, imageHeight, imageWidth)
 
-    randomYCoordinateInBox = random.randint(yMinAbsolute, yMaxAbsolute)
-    randomXCoordinateInBox = random.randint(xMinAbsolute, xMaxAbsolute)
+    offsetYMinAbsolute, offsetYMaxAbsolute, offsetXMinAbsolute, offsetXMaxAbsolute = \
+        AddInaccuracyMarginToCoordinates(yMinAbsolute, yMaxAbsolute, xMinAbsolute, xMaxAbsolute)
+
+    randomYCoordinateInBox = random.randint(offsetYMinAbsolute, offsetYMaxAbsolute)
+    randomXCoordinateInBox = random.randint(offsetXMinAbsolute, offsetXMaxAbsolute)
 
     SetCursorPosition(randomXCoordinateInBox, randomYCoordinateInBox)
     DoLeftClick()
@@ -76,3 +81,17 @@ def IsEnergyRechargeRequired(detectedClasses):
         return True
     else:
         return False
+
+
+def AddInaccuracyMarginToCoordinates(yMinAbsolute, yMaxAbsolute, xMinAbsolute, xMaxAbsolute):
+    deltaY = yMaxAbsolute - yMinAbsolute
+    deltaX = xMaxAbsolute - xMinAbsolute
+
+    yOffset = deltaY * INACCURARY_OFFSET
+    xOffset = deltaX * INACCURARY_OFFSET
+
+    offsetYMinAbsolute = int(yMinAbsolute + yOffset)
+    offsetYMaxAbsolute = int(yMaxAbsolute - yOffset)
+    offsetXMinAbsolute = int(xMinAbsolute + xOffset)
+    offsetXMaxAbsolute = int(xMaxAbsolute - xOffset)
+    return offsetYMinAbsolute, offsetYMaxAbsolute, offsetXMinAbsolute, offsetXMaxAbsolute
