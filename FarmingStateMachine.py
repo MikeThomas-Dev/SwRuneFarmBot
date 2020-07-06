@@ -25,7 +25,7 @@ class RunStates(Enum):
     CloseShop = 14
 
 
-def IsActionDelayElapsed(delayInSeconds=2):
+def IsActionDelayElapsed(delayInSeconds=3):
     if IsActionDelayElapsed.actionDelayStartTime is None:
         IsActionDelayElapsed.actionDelayStartTime = time.time()
         return False
@@ -42,11 +42,13 @@ IsActionDelayElapsed.actionDelayStartTime = None
 
 def DoClickOnTargetClass(classToClick, detectedClasses, detectedBoxes, screenshot):
     if not IsActionDelayElapsed():
+        print("Click action delay not elapsed!")
         return False
 
     isClassIndexExistent, classIndex = TryGetClassIndexByClass(classToClick, detectedClasses)
 
     if not isClassIndexExistent:
+        print("Target class for click action not found - resetting click action")
         return False
 
     imageHeight, imageWidth, colorChannel = screenshot.shape

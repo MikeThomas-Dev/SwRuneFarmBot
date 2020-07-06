@@ -106,7 +106,7 @@ def IsDetectionResultConsistent(detectedClasses):
         IsDetectionResultConsistent.lastDetectedClasses = detectedClasses
         return False
 
-    if np.array_equal(IsDetectionResultConsistent.lastDetectedClasses, detectedClasses):
+    if np.array_equal(np.sort(IsDetectionResultConsistent.lastDetectedClasses), np.sort(detectedClasses)):
         IsDetectionResultConsistent.consistentDetectionCounter += 1
     else:
         IsDetectionResultConsistent.consistentDetectionCounter = 0
@@ -143,7 +143,7 @@ def TryGetClassIndexByClass(searchedClass, detectedClasses):
     classIndexCollection = [i for i in range(len(detectedClasses)) if detectedClasses[i] == searchedClass.value]
 
     if not classIndexCollection:
-        print("Required class not found detected classes - resetting click action")
+        print("Required class not found in detected classes")
         return False, None
 
     # first result is used in the case of multiple matching detections as it is the one with the highest detection score

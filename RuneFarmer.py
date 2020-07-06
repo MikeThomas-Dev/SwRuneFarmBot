@@ -21,6 +21,7 @@ while True:
                                                                            detectionScoreThreshold)
 
     if not IsDetectionResultConsistent(classesToConsider):
+        print("Detection result NOT consistent")
         continue
 
     imageHeight, imageWidth, colorChannel = screenshot.shape

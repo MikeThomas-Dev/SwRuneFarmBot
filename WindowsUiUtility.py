@@ -36,7 +36,10 @@ def GetScreenShotFromWindow(windowHwnd):
 
 
 def SetCursorPosition(x, y):
-    win32api.SetCursorPos((x, y))
+    try:
+        win32api.SetCursorPos((x, y))
+    except:
+        print("Error in SetCursorPosition(", x, ", ", y, ")")
 
 
 def DoLeftClick():
