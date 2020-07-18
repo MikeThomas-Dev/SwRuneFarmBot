@@ -82,12 +82,13 @@ def test_IsHeroRuneWithMoreThanTwoFlatSubStats(testee):
 
 @pytest.fixture
 def fix_IsHeroRuneWithSpdSubStat():
-    return {(Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%\nDEF +20"), Rune.EvaluationResult.Invalid),
-            (Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%\nSPD +5"), Rune.EvaluationResult.Invalid),
-            (Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%"), Rune.EvaluationResult.Negative),
-            (Rune("", "", "CRI Rate +6%\nCRI Dmg +7%\nSPD +5"), Rune.EvaluationResult.Positive),
-            (Rune("", "", "XYZ\nCRI Dmg +7%\nSPD +5"), Rune.EvaluationResult.Positive),
-            (Rune("", "", "XYZ\nCRI Dmg +7%\nCRI Rate +6%"), Rune.EvaluationResult.Invalid)}
+    return {(Rune("", "SPD +7", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%\nDEF +20"), Rune.EvaluationResult.Invalid),
+            (Rune("", "ATK +22", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%\nSPD +5"), Rune.EvaluationResult.Invalid),
+            (Rune("", "SPD +7", "CRI Rate +6%\nCRI Dmg +7%\nResistance +6%"), Rune.EvaluationResult.Invalid),
+            (Rune("", "ATK +22", "CRI Rate +6%\nCRI Dmg +7%\nSPD +5"), Rune.EvaluationResult.Positive),
+            (Rune("", "ATK +22", "XYZ\nCRI Dmg +7%\nSPD +5"), Rune.EvaluationResult.Positive),
+            (Rune("", "ATK +22", "XYZ\nCRI Dmg +7%\nCRI Rate +6%"), Rune.EvaluationResult.Invalid),
+            (Rune("", "SPD +7", "Resistance +6%\nCRI Dmg +7%\nCRI Rate +6%"), Rune.EvaluationResult.Invalid)}
 
 
 @pytest.mark.parametrize("testee", fix_IsHeroRuneWithSpdSubStat())

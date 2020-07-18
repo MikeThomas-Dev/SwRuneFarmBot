@@ -125,7 +125,10 @@ class Rune:
         if self.grade == self.Grade.Hero and hasSpdSubStat:
             return self.EvaluationResult.Positive
 
-        if self.grade == self.Grade.Hero and not hasSpdSubStat and areAllSubStatsValid:
+        if self.grade == self.Grade.Hero \
+                and not hasSpdSubStat \
+                and areAllSubStatsValid \
+                and self.mainStat.Type is not StatType.Spd:
             return self.EvaluationResult.Negative
 
         return self.EvaluationResult.Invalid

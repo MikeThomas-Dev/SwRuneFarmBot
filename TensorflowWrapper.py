@@ -102,7 +102,7 @@ def IsDetectionResultConsistent(detectedClasses):
         IsDetectionResultConsistent.lastDetectedClasses = None
         return False
 
-    sortedDetectedClasses = np.sort(detectedClasses)
+    sortedDetectedClasses = np.sort(detectedClasses[:IsDetectionResultConsistent.DETECTIONCOUNTTOCONSIDER])
 
     if IsDetectionResultConsistent.lastDetectedClasses is None:
         IsDetectionResultConsistent.lastDetectedClasses = sortedDetectedClasses
@@ -122,6 +122,7 @@ def IsDetectionResultConsistent(detectedClasses):
 
 
 IsDetectionResultConsistent.REQUIREDCONSISTENTDETECTIONS = 3
+IsDetectionResultConsistent.DETECTIONCOUNTTOCONSIDER = 3
 IsDetectionResultConsistent.consistentDetectionCounter = 0
 IsDetectionResultConsistent.lastDetectedClasses = None
 
