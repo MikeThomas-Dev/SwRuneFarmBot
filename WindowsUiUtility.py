@@ -1,9 +1,7 @@
-import time
 import cv2
 import win32gui
-import win32api
-import win32con
 import numpy as np
+from SwRuneFarmerProject.MouseLibrary import mouse
 from ctypes import windll
 from PIL import ImageGrab
 
@@ -47,13 +45,11 @@ def __setWindowCoordinateOffset(windowPosition):
 
 def SetCursorPosition(x, y):
     try:
-        win32api.SetCursorPos((x + _windowXCoordinateOffset, y + _windowYCoordinateOffset))
+        mouse.move(x + _windowXCoordinateOffset, y + _windowYCoordinateOffset)
     except Exception as e:
         print(e.__doc__)
         print("Error in SetCursorPosition(", x, ", ", y, ")")
 
 
 def DoLeftClick():
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
-    time.sleep(.1)
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
+    mouse.click()
