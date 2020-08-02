@@ -32,6 +32,8 @@ C:
 │   │   │   │   └─── SwRuneFarmerProject
 │   │   │   │   │   └─── Content of this repository
 ```
+## Dependencies
+In order to perform mouse move and click actions the functionality provided by [mouse][8] is used. The stated repository v0.7.1 is included in this repository.
 
 [1]: https://summonerswar.com/
 [2]: https://www.python.org/
@@ -40,3 +42,4 @@ C:
 [5]: https://github.com/EdjeElectronics/TensorFlow-Object-Detection-API-Tutorial-Train-Multiple-Objects-Windows-10
 [6]: https://nanonets.com/blog/ocr-with-tesseract/
 [7]: https://www.bluestacks.com/de/index.html
+[8]: https://github.com/boppreh/mouse
