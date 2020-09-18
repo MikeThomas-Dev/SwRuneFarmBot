@@ -35,6 +35,10 @@ C:
 ## Dependencies
 In order to perform mouse move and click actions the functionality provided by [mouse][8] is used. The stated repository v0.7.1 is included in this repository.
 
+## Conclusion of this project
+The game which is automated by this bot included a feature, in [patch 6.0.4][9], that can be seen as a substitution for the functionality provided by this bot.
+As a summary of the findings of this project it can be stated that game automation based on object detection and OCR is feasible. Gathering and labeling the data for object detection and finding the correct input information and parameters for the OCR is the time consuming part.
+
 [1]: https://summonerswar.com/
 [2]: https://www.python.org/
 [3]: https://github.com/tensorflow/models/tree/master/research/object_detection
@@ -43,3 +47,4 @@ In order to perform mouse move and click actions the functionality provided by [
 [6]: https://nanonets.com/blog/ocr-with-tesseract/
 [7]: https://www.bluestacks.com/de/index.html
 [8]: https://github.com/boppreh/mouse
+[9]: https://withhive.com/notice/39124
